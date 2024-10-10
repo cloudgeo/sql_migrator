@@ -1,0 +1,17 @@
+[package]
+name = "sql_migrator"
+version = "1.0.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+structopt = "0.3"
+anyhow = "*"
+async-trait = "*"
+tokio = {version="*", features=["full"]}
+tokio-postgres = {version = "*", features = ["with-serde_json-1"]}
+regex = "*"
+generic-filesystem = {git = "https://github.com/cloudgeo/rust-libs"}
+
+clap = {version = "*", features = ["derive"]}

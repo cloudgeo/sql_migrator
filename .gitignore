@@ -1,0 +1,6 @@
+target
+*.lock
+migrations
+
+.env
+.DS_Store
