@@ -4,7 +4,7 @@ use tokio_postgres::{Client, Config, NoTls};
 
 use super::EngineImpl;
 
-const TABLE_CREATION_STATEMENT: &'static str = "CREATE TABLE IF NOT EXISTS sql_migrations ( hash VARCHAR NOT NULL, name VARCHAR);";
+const TABLE_CREATION_STATEMENT: &'static str = "CREATE TABLE IF NOT EXISTS sql_migrations (hash VARCHAR NOT NULL, filename UNIQUE VARCHAR NOT NULL, timestamp TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP);";
 
 async fn establish_connection(connection_string: &str) -> Client {
     let config = Config::from_str(connection_string).unwrap();
@@ -49,11 +49,11 @@ impl EngineImpl for PostgresEngine {
         return Ok(row.len() > 0);
     }
 
-    async fn add_hash<T>(&self, val: &T) -> anyhow::Result<()> 
+    async fn add_hash<T>(&self, val: &T, filename: &str) -> anyhow::Result<()> 
     where T: ToString + std::fmt::Display + Sync {
         println!("Hash");
-        let query = "INSERT INTO sql_migrations (hash) VALUES ($1);"; 
-        self.connection.execute(query, &[&val.to_string()]).await?;
+        let query = "INSERT INTO sql_migrations (hash, filename) VALUES ($1, $2);"; 
+        self.connection.execute(query, &[&val.to_string(), &filename]).await?;
 
         return Ok(());
     }

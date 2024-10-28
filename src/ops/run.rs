@@ -32,7 +32,7 @@ pub async fn run<T>(migrations_location: &str, engine: &T) -> anyhow::Result<()>
         }
 
         engine.migrate(&file_data_converted).await?;
-        engine.add_hash(&hash).await?;
+        engine.add_hash(&hash, &file.name).await?;
         println!("Migration finished {:?}", file.name);
     }
 
